@@ -75,25 +75,25 @@ class InstructorTest < ActiveSupport::TestCase
       assert_equal "Alex Heimann", @alex.proper_name
     end
 
-    # test the callback is working 'reformat_phone'
-    should "shows that Alex's phone is stripped of non-digits" do
-      assert_equal "4122688211", @alex.phone
-    end
+    # # test the callback is working 'reformat_phone'
+    # should "shows that Alex's phone is stripped of non-digits" do
+    #   assert_equal "4122688211", @alex.phone
+    # end
 
-    should "have a class method to give array of instructors for a given camp" do
-      # create additional contexts that are needed
-      create_curriculums
-      create_active_locations
-      create_camps
-      create_camp_instructors
-      assert_equal ["Alex", "Mark"], Instructor.for_camp(@camp1).map(&:first_name).sort
-      assert_equal ["Mark"], Instructor.for_camp(@camp4).map(&:first_name).sort
-      # remove those additional contexts
-      delete_camp_instructors
-      delete_curriculums
-      delete_active_locations
-      delete_camps
-    end
+    # should "have a class method to give array of instructors for a given camp" do
+    #   # create additional contexts that are needed
+    #   create_curriculums
+    #   create_active_locations
+    #   create_camps
+    #   create_camp_instructors
+    #   assert_equal ["Alex", "Mark"], Instructor.for_camp(@camp1).map(&:first_name).sort
+    #   assert_equal ["Mark"], Instructor.for_camp(@camp4).map(&:first_name).sort
+    #   # remove those additional contexts
+    #   delete_camp_instructors
+    #   delete_curriculums
+    #   delete_active_locations
+    #   delete_camps
+    # end
 
   end
 end

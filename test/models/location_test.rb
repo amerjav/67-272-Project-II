@@ -35,25 +35,25 @@ class LocationTest < ActiveSupport::TestCase
   should_not allow_value("bad").for(:max_capacity)
 
   # set up context
-  context "Within context" do
-    setup do 
-      create_active_locations
-    end
+  # context "Within context" do
+  #   setup do 
+  #     create_active_locations
+  #   end
     
-    teardown do
-      delete_active_locations
-    end
+  #   teardown do
+  #     delete_active_locations
+  #   end
 
-    should "show that there are two locations in in alphabetical order" do
-      assert_equal ["Carnegie Mellon", "North Side"], Location.alphabetical.all.map(&:name)
-    end
+  #   should "show that there are two locations in in alphabetical order" do
+  #     assert_equal ["Carnegie Mellon", "North Side"], Location.alphabetical.all.map(&:name)
+  #   end
 
-    should "show that there are two active locations and one inactive location" do
-      create_inactive_locations
-      assert_equal ["Carnegie Mellon", "North Side"], Location.active.all.map(&:name).sort
-      assert_equal ["Squirrel Hill"], Location.inactive.all.map(&:name).sort
-      delete_inactive_locations
-    end
+  #   should "show that there are two active locations and one inactive location" do
+  #     create_inactive_locations
+  #     assert_equal ["Carnegie Mellon", "North Side"], Location.active.all.map(&:name).sort
+  #     assert_equal ["Squirrel Hill"], Location.inactive.all.map(&:name).sort
+  #     delete_inactive_locations
+  #   end
 
-  end
+  #end
 end

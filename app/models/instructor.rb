@@ -62,34 +62,34 @@ class Instructor < ApplicationRecord
   #   self.phone = phone       # reset self.phone to new string
   # end
   
-  def deact_user_if_ins_inact
-    if !self.active && !self.user.nil?
-      self.user.active = false
-      self.user.save
-    end 
-  end 
+  # def deact_user_if_ins_inact
+  #   if !self.active && !self.user.nil?
+  #     self.user.active = false
+  #     self.user.save
+  #   end 
+  # end 
   
-  def check_if_taught_past_camps
-    unless self.camps.past.empty?
-      errors.add(:base, 'Cannot delete instructor because they have taught past camps!')
-    end 
-  end 
+  # def check_if_taught_past_camps
+  #   unless self.camps.past.empty?
+  #     errors.add(:base, 'Cannot delete instructor because they have taught past camps!')
+  #   end 
+  # end 
   
-  def destroy_user_account
-    self.user.destroy
-  end 
+  # def destroy_user_account
+  #   self.user.destroy
+  # end 
   
-  def convert_inactive_remove_upc_camps
-    if @delete_pass != true
-      remove_upc_camps
-      self.make_inactive
-    end
-    @delete_pass = nil 
-  end 
+  # def convert_inactive_remove_upc_camps
+  #   if @delete_pass != true
+  #     remove_upc_camps
+  #     self.make_inactive
+  #   end
+  #   @delete_pass = nil 
+  # end 
   
-  def remove_upc_camps
-    self.camp_instructors.select { |camp_ins| camp_ins.camp.start_date >= Date.current }.each{ |camp_ins| camp_ins.destroy }
-  end
+  # def remove_upc_camps
+  #   self.camp_instructors.select { |camp_ins| camp_ins.camp.start_date >= Date.current }.each{ |camp_ins| camp_ins.destroy }
+  # end
   
   
 

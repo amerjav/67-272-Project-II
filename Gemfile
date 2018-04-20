@@ -82,6 +82,11 @@ group :development do
 end
 
 # Gems used only in testing
+
+
+
+
+
 group :test do
   gem 'simplecov', '0.15.1'
   gem 'shoulda', '3.5.0'
@@ -95,5 +100,3 @@ group :test do
   gem 'database_cleaner', '1.6.2'
   gem 'launchy', '2.4.3'
 end
-
-

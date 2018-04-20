@@ -55,72 +55,72 @@ class Camp < ApplicationRecord
     self.registration_counts
   end 
 
-  # callbacks
-  before_destroy do
-    check_if_any1_reg
-    if errors.present?
-      throw(:abort) #throw an abort cuz errors exist
-    else 
-      remove_ci
-    end
-  end
+  # # callbacks
+  # before_destroy do
+  #   check_if_any1_reg
+  #   if errors.present?
+  #     throw(:abort) #throw an abort cuz errors exist
+  #   else 
+  #     remove_ci
+  #   end
+  # end
   
-  before_update :camp_delete_pass
-  #before_update :remove_instructors_from_inactive_camp
+  # before_update :camp_delete_pass
+  # #before_update :remove_instructors_from_inactive_camp
 
-  private
-  def curriculum_is_active_in_the_system
-    return if self.curriculum.nil?
-    errors.add(:curriculum, "is not currently active") unless self.curriculum.active
-  end
+  # private
+  # def curriculum_is_active_in_the_system
+  #   return if self.curriculum.nil?
+  #   errors.add(:curriculum, "is not currently active") unless self.curriculum.active
+  # end
 
-  def location_is_active_in_the_system
-    return if self.location.nil?
-    errors.add(:location, "is not currently active") unless self.location.active
-  end
+  # def location_is_active_in_the_system
+  #   return if self.location.nil?
+  #   errors.add(:location, "is not currently active") unless self.location.active
+  # end
 
-  def camp_is_not_a_duplicate
-    return true if self.time_slot.nil? || self.start_date.nil? || self.location_id.nil?
-    if self.already_exists?
-      errors.add(:time_slot, "already exists for start date, time slot and location")
-    end
-  end
+  # def camp_is_not_a_duplicate
+  #   return true if self.time_slot.nil? || self.start_date.nil? || self.location_id.nil?
+  #   if self.already_exists? 
+  #     errors.add(:time_slot, "already exists for start date, time slot and location")
+  #   end
+  # end
 
-  def max_students_not_greater_than_capacity
-    return true if self.max_students.nil? || self.location_id.nil?
-    if self.max_students > self.location.max_capacity
-      errors.add(:max_students, "is greater than the location capacity")
-    end
-  end
+  # def max_students_not_greater_than_capacity
+  #   return true if self.max_students.nil? || self.location_id.nil?
+  #   if self.max_students > self.location.max_capacity
+  #     errors.add(:max_students, "is greater than the location capacity")
+  #   end
+  # end
 
-  def remove_instructors_from_inactive_camp
-    # confirm that camp is marked as inactive
-    if !self.active
-      self.camp_instructors.each{|ci| ci.destroy}
-    end
-  end
+  # def remove_instructors_from_inactive_camp
+  #   # confirm that camp is marked as inactive
+  #   if !self.active
+  #     self.camp_instructors.each{|ci| ci.destroy}
+  #   end
+  # end
   
   
-  def any_camp_reg?
-    !self.registrations.to_a.empty?
-  end 
+  # def any_camp_reg?
+  #   !self.registrations.to_a.empty?
+  # end 
   
-  def camp_deactivation_pass
-    return true if self.active
-    if any_camp_reg?
-      errors.add(:base, "Camp cannot be inactive cuz students are registered")
-    end 
-  end 
+  # def camp_deactivation_pass
+  #   return true if self.active
+  #   if any_camp_reg?
+  #     errors.add(:base, "Camp cannot be inactive cuz students are registered")
+  #   end 
+  # end 
   
-  def check_if_any1_reg
-    if any_camp_reg?
-    errors.add(:base, "Camp cannot be deleted cuz students are registered")
-    end 
-  end
+  # def check_if_any1_reg
+  #   if any_camp_reg?
+  #   errors.add(:base, "Camp cannot be deleted cuz students are registered")
+  #   end 
+  # end
   
   
-  def remove_ci
-    self.camp_instructors.each{ |ci| ci.destroy}
-  end 
+  # def remove_ci
+  #   self.camp_instructors.each{ |ci| ci.destroy}
+  # end 
   
 end

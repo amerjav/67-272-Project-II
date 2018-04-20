@@ -19,23 +19,23 @@ class Family < ApplicationRecord
         cannot_destroy_object()
     end
     
-    before_update :inactive_fam_etc
+    #before_update :inactive_fam_etc
     
     private ############################
-    def inactive_fam_etc
-        if self.active == false
-            destroy_upc_reg
-            make_students_inactive
-        end
-    end
+    # def inactive_fam_etc
+    #     if self.active == false
+    #         destroy_upc_reg
+    #         make_students_inactive
+    #     end
+    # end
     
-    def destroy_upc_reg
-        self.registrations.select{|r| r.camp.start_date >= Date.current}.each{|r| r.destroy}
-    end 
+    # def destroy_upc_reg
+    #     self.registrations.select{|r| r.camp.start_date >= Date.current}.each{|r| r.destroy}
+    # end 
     
-    def make_students_inactive
-        self.students.each{ |s| s.make_students_inactive }
-    end 
+    # def make_students_inactive
+    #     self.students.each{ |s| s.make_students_inactive }
+    # end 
     
     
 end

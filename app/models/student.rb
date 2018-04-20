@@ -32,17 +32,17 @@ class Student < ApplicationRecord
     #callbax #################################################
     before_save :set_unrated_zero
     
-    before_destroy do
-        check_if_ever_registered_for_past_camp
-        if errors.present?
-            @destroyable = false
-            throw(:abort)
-        else
-            remove_upc_reg
-        end
-    end
+    # before_destroy do
+    #     check_if_ever_registered_for_past_camp
+    #     if errors.present?
+    #         @destroyable = false
+    #         throw(:abort)
+    #     else
+    #         remove_upc_reg
+    #     end
+    # end
 
-    after_rollback :make_inactive_and_remove_reg
+    #after_rollback :make_inactive_and_remove_reg
 
     
     
@@ -63,46 +63,46 @@ class Student < ApplicationRecord
     
     
     private ################################################
-    def active_family
-        is_active_in_the_system(:family)
-    end
+    # def active_family
+    #     is_active_in_the_system(:family)
+    # end
     
     def set_unrated_zero
         self.rating ||= 0
     end 
     
     #destroy if never registered, deactive if registered in past camp
-    def reg_past_camps_helper
-        sr = self.registrations
-        !sr.select{ |r| r.camp.start_date < Date.current }.empty?
-    end
+    # def reg_past_camps_helper
+    #     sr = self.registrations
+    #     !sr.select{ |r| r.camp.start_date < Date.current }.empty?
+    # end
     
-    def reg_past_camps
-        return if self.registrations.empty?
-        if reg_past_camps_helper?
-            errors.add(:base, "This student has registered for a past camp and therefore cannot be destroyed. The student is however made inactive.")
-        end
-    end
+    # def reg_past_camps
+    #     return if self.registrations.empty?
+    #     if reg_past_camps_helper?
+    #         errors.add(:base, "This student has registered for a past camp and therefore cannot be destroyed. The student is however made inactive.")
+    #     end
+    # end
   
-    def remove_upc_reg
-      return true if self.registrations.empty?
-      upc_reg = self.registrations.select{ |r| r.camp.start_date >= Date.current }
-      upc_reg.each { |upreg| upreg.destroy }
-    end 
+    # def remove_upc_reg
+    #   return true if self.registrations.empty?
+    #   upc_reg = self.registrations.select{ |r| r.camp.start_date >= Date.current }
+    #   upc_reg.each { |upreg| upreg.destroy }
+    # end 
   
-    #make student inactive if previously registered
-    def make_inactive_and_remove_reg
-        if @destroyable == false
-            remove_upc_reg
-            self.make_inactive 
-        end 
-        @destroyable = nil 
-    end
+    # #make student inactive if previously registered
+    # def make_inactive_and_remove_reg
+    #     if @destroyable == false
+    #         remove_upc_reg
+    #         self.make_inactive 
+    #     end 
+    #     @destroyable = nil 
+    # end
     
     
-    def remove_upc_reg_inactive
-        remove_upc_reg if !self.active
-    end
+    # def remove_upc_reg_inactive
+    #     remove_upc_reg if !self.active
+    # end
             
     
     

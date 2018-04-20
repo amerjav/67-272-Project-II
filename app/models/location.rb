@@ -17,21 +17,21 @@ class Location < ApplicationRecord
   scope :active, -> { where(active: true) }
   scope :inactive, -> { where(active: false) }
   
-  #call backsss
-  before_destroy do 
-    check_used_past_camp
-    if errors.present?
-      @delete_pass = false
-      throw(:abort)
-    end
-  end 
+  # #call backsss
+  # before_destroy do 
+  #   check_used_past_camp
+  #   if errors.present?
+  #     @delete_pass = false
+  #     throw(:abort)
+  #   end
+  # end 
   
-  private
-  def check_used_past_camp
-      unless self.camps.past.empty?
-        errors.add(:base, "Location cannot be deleted, it has been used for past camps.")
-      end
-  end
+  # private
+  # def check_used_past_camp
+  #     unless self.camps.past.empty?
+  #       errors.add(:base, "Location cannot be deleted, it has been used for past camps.")
+  #     end
+  # end
   
   
   
