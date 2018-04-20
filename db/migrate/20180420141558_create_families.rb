@@ -5,7 +5,7 @@ class CreateFamilies < ActiveRecord::Migration[5.1]
       t.string :parent_first_name
       #t.integer :user_id
       t.references :user, foreign_key: true
-      t.boolean :active
+      t.boolean :active, default: true
 
       t.timestamps
     end

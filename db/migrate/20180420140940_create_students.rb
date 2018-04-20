@@ -6,8 +6,8 @@ class CreateStudents < ActiveRecord::Migration[5.1]
       #t.integer :family_id
       t.references :family, foreign_key: true
       t.date :date_of_birth
-      t.integer :rating
-      t.boolean :active
+      t.integer :rating, default: 0
+      t.boolean :active, default: true
 
       t.timestamps
     end

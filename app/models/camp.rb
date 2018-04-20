@@ -4,6 +4,8 @@ class Camp < ApplicationRecord
   belongs_to :location
   has_many :camp_instructors
   has_many :instructors, through: :camp_instructors
+  has_many :registrations
+  has_many :students, through: :registrations
 
   # validations
   validates_presence_of :location_id, :curriculum_id, :time_slot, :start_date
@@ -16,6 +18,9 @@ class Camp < ApplicationRecord
   validate :location_is_active_in_the_system
   validate :camp_is_not_a_duplicate, on: :create
   validate :max_students_not_greater_than_capacity
+  
+  #new vals
+  validate :camp_deactivation_pass
 
   # scopes
   scope :alphabetical, -> { joins(:curriculum).order('name') }
@@ -28,6 +33,11 @@ class Camp < ApplicationRecord
   scope :past, -> { where('end_date < ?', Date.today) }
   scope :for_curriculum, ->(curriculum_id) { where("curriculum_id = ?", curriculum_id) }
   
+  #new scopes
+  scope :full, -> { joins(:registrations).group(:camp_id).having('count(*) = max_students') }
+  scope :empty, -> { joins("left join registrations on camps.id=registrations.camp_id").where("registrations.student_id is null") }
+
+  
     # instance methods
   def name
     self.curriculum.name
@@ -36,11 +46,29 @@ class Camp < ApplicationRecord
   def already_exists?
     Camp.where(time_slot: self.time_slot, start_date: self.start_date, location_id: self.location_id).size == 1
   end
+  
+  def is_full?
+    self.max_students == self.registration_counts
+  end 
+  
+  def enrollment
+    self.registration_counts
+  end 
 
   # callbacks
-  before_update :remove_instructors_from_inactive_camp
+  before_destroy do
+    check_if_any1_reg
+    if errors.present?
+      throw(:abort) #throw an abort cuz errors exist
+    else 
+      remove_ci
+    end
+  end
+  
+  before_update :camp_delete_pass
+  #before_update :remove_instructors_from_inactive_camp
 
-  # private
+  private
   def curriculum_is_active_in_the_system
     return if self.curriculum.nil?
     errors.add(:curriculum, "is not currently active") unless self.curriculum.active
@@ -71,4 +99,28 @@ class Camp < ApplicationRecord
       self.camp_instructors.each{|ci| ci.destroy}
     end
   end
+  
+  
+  def any_camp_reg?
+    !self.registrations.to_a.empty?
+  end 
+  
+  def camp_deactivation_pass
+    return true if self.active
+    if any_camp_reg?
+      errors.add(:base, "Camp cannot be inactive cuz students are registered")
+    end 
+  end 
+  
+  def check_if_any1_reg
+    if any_camp_reg?
+    errors.add(:base, "Camp cannot be deleted cuz students are registered")
+    end 
+  end
+  
+  
+  def remove_ci
+    self.camp_instructors.each{ |ci| ci.destroy}
+  end 
+  
 end
